@@ -1,5 +1,7 @@
 # 🚀 Terraform AWS Image Gallery Infrastructure
 
+[![Terraform CI](https://github.com/oaolumide1/terraform-aws-image-gallery/actions/workflows/terraform.yml/badge.svg)](https://github.com/oaolumide1/terraform-aws-image-gallery/actions/workflows/terraform.yml)
+
 ![Terraform](https://img.shields.io/badge/Terraform-v1.13-623CE4?logo=terraform&logoColor=white)
 ![AWS](https://img.shields.io/badge/AWS-Cloud-FF9900?logo=amazonaws&logoColor=white)
 ![Infrastructure as Code](https://img.shields.io/badge/Infrastructure%20as%20Code-Terraform-blue)
