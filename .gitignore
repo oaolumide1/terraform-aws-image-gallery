@@ -1,0 +1,30 @@
+# Terraform working directory
+.terraform/
+
+# Terraform state files
+*.tfstate
+*.tfstate.*
+
+# Crash logs
+crash.log
+
+# Variable files containing local configuration
+terraform.tfvars
+*.auto.tfvars
+
+# Terraform plan files
+*.tfplan
+tfplan
+
+# CLI configuration
+.terraformrc
+terraform.rc
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
