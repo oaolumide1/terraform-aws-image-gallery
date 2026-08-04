@@ -1,5 +1,13 @@
 terraform {
-  required_version = ">= 1.5.0"
+  required_version = ">= 1.5"
+
+  backend "s3" {
+    bucket         = "oaolumide1-terraform-state-2026"
+    key            = "image-gallery/terraform.tfstate"
+    region         = "ca-central-1"
+    dynamodb_table = "terraform-state-lock"
+    encrypt        = true
+  }
 
   required_providers {
     aws = {

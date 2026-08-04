@@ -1,4 +1,4 @@
-# 🚀 Terraform AWS Image Gallery Infrastructure
+# 🚀 Terraform AWS Image Gallery Infrastructure as Code (IaC)
 
 [![Terraform CI](https://github.com/oaolumide1/terraform-aws-image-gallery/actions/workflows/terraform.yml/badge.svg)](https://github.com/oaolumide1/terraform-aws-image-gallery/actions/workflows/terraform.yml)
 
