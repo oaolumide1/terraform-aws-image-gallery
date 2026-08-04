@@ -49,6 +49,8 @@ Your infrastructure matches the configuration.
 - Dynamic Amazon Linux 2023 AMI retrieval using AWS Systems Manager Parameter Store
 - EC2 User Data bootstrapping
 - Target Group Health Checks
+- Remote Terraform State (Amazon S3 Backend)
+- DynamoDB State Locking
 
 ---
 
@@ -256,8 +258,6 @@ This project strengthened practical experience with:
 - Launch Templates
 - AWS Certificate Manager (HTTPS)
 - Route53
-- Remote Terraform State (S3 Backend)
-- DynamoDB State Locking
 - GitHub Actions CI/CD
 - CloudWatch Dashboards
 - CloudWatch Alarms
