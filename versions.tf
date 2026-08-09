@@ -1,8 +1,9 @@
 terraform {
+
   required_version = ">= 1.5"
 
   backend "s3" {
-    bucket         = "oaolumide1-terraform-state-2026"
+    bucket         = "oaolumide1-tfstate-738882406911"
     key            = "image-gallery/terraform.tfstate"
     region         = "ca-central-1"
     dynamodb_table = "terraform-state-lock"

@@ -1,11 +1,14 @@
-# 🚀 Terraform AWS Image Gallery Infrastructure as Code (IaC)
+# 🚀 AWS Image Gallery Infrastructure with Terraform
 
-[![Terraform CI](https://github.com/oaolumide1/terraform-aws-image-gallery/actions/workflows/terraform.yml/badge.svg)](https://github.com/oaolumide1/terraform-aws-image-gallery/actions/workflows/terraform.yml)
+Production-ready AWS Infrastructure as Code (IaC) project built with Terraform, featuring modular architecture, remote state management, monitoring, alerting, and continuous integration.
 
-![Terraform](https://img.shields.io/badge/Terraform-v1.13-623CE4?logo=terraform&logoColor=white)
-![AWS](https://img.shields.io/badge/AWS-Cloud-FF9900?logo=amazonaws&logoColor=white)
-![Infrastructure as Code](https://img.shields.io/badge/Infrastructure%20as%20Code-Terraform-blue)
-![Status](https://img.shields.io/badge/Status-Completed-success)
+---
+
+![Terraform](https://img.shields.io/badge/Terraform-v1.5+-623CE4?logo=terraform)
+![AWS](https://img.shields.io/badge/AWS-Cloud-orange?logo=amazonaws)
+![GitHub Actions](https://img.shields.io/badge/GitHub-Actions-blue?logo=githubactions)
+![IaC](https://img.shields.io/badge/Infrastructure-as-Code-blue)
+![CloudWatch](https://img.shields.io/badge/Monitoring-CloudWatch-success)
 
 ---
 
@@ -27,7 +30,7 @@ Your infrastructure matches the configuration.
 # 🏗 AWS Architecture
 
 ![AWS Architecture](architecture/aws-architecture.png)
-
+The solution deploys a highly available AWS infrastructure consisting of a custom VPC, public and private subnets, Application Load Balancer, EC2 instances, EFS shared storage, S3 object storage, IAM roles, CloudWatch monitoring, SNS notifications, and a remote Terraform backend.
 ---
 
 # ✨ Features
@@ -49,11 +52,65 @@ Your infrastructure matches the configuration.
 - Dynamic Amazon Linux 2023 AMI retrieval using AWS Systems Manager Parameter Store
 - EC2 User Data bootstrapping
 - Target Group Health Checks
+- Github Actions CI
+- Amazon SNS Notifications
+- CloudWatch Alarms
+- CloudWatch Dashboard
 - Remote Terraform State (Amazon S3 Backend)
 - DynamoDB State Locking
 
 ---
+# 📈 Monitoring & Alerting
 
+The infrastructure includes enterprise-style monitoring and alerting using Amazon CloudWatch and Amazon SNS.
+
+### Monitoring Features
+
+- CloudWatch Dashboard
+- EC2 CPU Utilization Alarms
+- EC2 Status Check Alarms
+- ALB Healthy Host Alarm
+- ALB HTTP 5XX Alarm
+- Amazon SNS Email Notifications
+![CloudWatch Dashboard](images/cloudwatch-dashboard.png)
+
+![CloudWatch Alarms](images/cloudwatch-alarms.png)
+
+![SNS](images/sns-topic.png)
+---
+# 🔒 Remote Terraform Backend
+
+Terraform state is stored securely in Amazon S3 with state locking provided by DynamoDB.
+
+Features:
+
+- Remote State Storage
+- State Locking
+- Versioning
+- Encryption
+- Team Collaboration Support
+
+![Backend S3](images/backend-s3.png)
+
+![DynamoDB Lock Table](images/backend-dynamodb.png)
+---
+# ⚙️ Continuous Integration
+
+GitHub Actions automatically performs:
+
+- terraform fmt
+- terraform validate
+
+![GitHub Actions](images/github-actions.png)
+---
+# 🧩 Key Engineering Decisions
+
+- Used a modular Terraform architecture to improve reusability and maintainability.
+- Configured a remote Terraform backend with Amazon S3 and DynamoDB to support collaborative state management.
+- Implemented CloudWatch alarms and Amazon SNS notifications for operational monitoring.
+- Retrieved the latest Amazon Linux 2023 AMI dynamically using AWS Systems Manager Parameter Store instead of hardcoded AMI IDs.
+- Used GitHub Actions to automatically validate Terraform code on every push.
+---
 # ☁ AWS Services Used
 
 | Service | Purpose |
@@ -258,11 +315,21 @@ This project strengthened practical experience with:
 - Launch Templates
 - AWS Certificate Manager (HTTPS)
 - Route53
-- GitHub Actions CI/CD
-- CloudWatch Dashboards
-- CloudWatch Alarms
 - AWS WAF
+- AWS Secrets Manager
+- Auto Scaling Policies
+- Multi-Environment Support (dev, stage, prod)
 
+---
+# 📊 Project Summary
+
+- 8 Terraform Modules
+- 30+ AWS Resources
+- Remote Backend (S3 + DynamoDB)
+- GitHub Actions CI
+- CloudWatch Monitoring
+- Amazon SNS Alerting
+- Infrastructure as Code (IaC)
 ---
 
 # 👨‍💻 Author

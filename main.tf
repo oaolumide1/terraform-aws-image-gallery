@@ -84,3 +84,17 @@ module "ec2" {
 
   efs_dns_name = module.efs.efs_dns_name
 }
+module "monitoring" {
+
+  source = "./modules/monitoring"
+
+  project_name = var.project_name
+  environment  = var.environment
+
+  instance_ids = module.ec2.instance_ids
+
+  alb_arn          = module.alb.alb_arn
+  target_group_arn = module.alb.target_group_arn
+
+  notification_email = "oaolumide1@gmail.com"
+}
