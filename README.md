@@ -121,6 +121,36 @@ terraform-image-gallery/
 
 ---
 
+## Architecture Highlights
+
+- High Availability across two Availability Zones
+- Private EC2 instances managed through AWS Systems Manager
+- Application Load Balancer for traffic distribution
+- Auto Scaling Group with Launch Template
+- Shared storage using Amazon EFS
+- CloudWatch monitoring and alerting
+- Remote Terraform state stored in Amazon S3
+
+---
+
+## Skills Demonstrated
+
+- Terraform
+- Infrastructure as Code (IaC)
+- AWS Networking
+- Amazon EC2
+- Auto Scaling
+- Elastic Load Balancing
+- IAM
+- CloudWatch
+- SNS
+- EFS
+- S3
+- Session Manager
+- Git
+- GitHub Actions
+---
+
 # 🚀 Deployment
 
 Clone the repository
@@ -240,7 +270,27 @@ This project demonstrates practical experience with:
 - CI/CD Pipeline Enhancements
 
 ---
+# Version 2.0.0
 
+## Highlights
+
+- Migrated from standalone EC2 instances to an Auto Scaling Group
+- Added Launch Template
+- Implemented AWS Systems Manager Session Manager
+- Added CloudWatch Dashboard
+- Added CloudWatch Alarms
+- Added SNS Notifications
+- Modularized infrastructure
+- Production-ready Terraform architecture
+- Improved security posture
+---
+## Project Status
+
+✔ Completed
+
+Production-ready Terraform deployment demonstrating AWS infrastructure automation, Auto Scaling, monitoring, and Infrastructure as Code best practices.
+
+---
 # 👤 Author
 
 **Oluwashola Olumide**
