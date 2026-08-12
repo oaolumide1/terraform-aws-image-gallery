@@ -65,24 +65,54 @@ module "alb" {
 # EC2 Module
 #################################
 
-module "ec2" {
-  source = "./modules/ec2"
+# module "ec2" {
+#  source = "./modules/ec2"
+
+#  project_name = var.project_name
+#  environment  = var.environment
+
+#  instance_count = var.instance_count
+#  instance_type  = var.instance_type
+#  key_pair_name  = var.key_pair_name
+
+#  private_subnets       = module.network.private_subnets
+#  app_security_group_id = module.security.app_security_group_id
+
+#  instance_profile_name = module.iam.instance_profile_name
+
+#  target_group_arn = module.alb.target_group_arn
+
+#  efs_dns_name = module.efs.efs_dns_name
+#}
+
+#################################
+# Auto Scaling
+#################################
+
+module "autoscaling" {
+
+  source = "./modules/autoscaling"
 
   project_name = var.project_name
   environment  = var.environment
 
-  instance_count = var.instance_count
-  instance_type  = var.instance_type
-  key_pair_name  = var.key_pair_name
+  instance_type = var.instance_type
+  key_pair_name = var.key_pair_name
 
-  private_subnets       = module.network.private_subnets
-  app_security_group_id = module.security.app_sg_id
+  private_subnets = module.network.private_subnets
+
+  app_security_group_id = module.security.app_security_group_id
 
   instance_profile_name = module.iam.instance_profile_name
 
   target_group_arn = module.alb.target_group_arn
 
-  efs_dns_name = module.efs.efs_dns_name
+  efs_dns_name     = module.efs.efs_dns_name
+  min_size         = var.min_size
+  desired_capacity = var.desired_capacity
+  max_size         = var.max_size
+  sns_topic_arn    = module.monitoring.sns_topic_arn
+
 }
 module "monitoring" {
 
@@ -91,10 +121,11 @@ module "monitoring" {
   project_name = var.project_name
   environment  = var.environment
 
-  instance_ids = module.ec2.instance_ids
 
   alb_arn          = module.alb.alb_arn
   target_group_arn = module.alb.target_group_arn
+
+  autoscaling_group_name = module.autoscaling.autoscaling_group_name
 
   notification_email = "oaolumide1@gmail.com"
 }

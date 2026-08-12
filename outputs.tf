@@ -20,7 +20,7 @@ output "alb_security_group_id" {
 }
 
 output "app_security_group_id" {
-  value = module.security.app_sg_id
+  value = module.security.app_security_group_id
 }
 
 output "redis_security_group_id" {
@@ -50,13 +50,4 @@ output "efs_id" {
 
 output "efs_dns_name" {
   value = module.efs.efs_dns_name
-}
-output "instance_ids" {
-  description = "EC2 Instance IDs"
-  value       = module.ec2.instance_ids
-}
-
-output "private_ips" {
-  description = "Private IP Addresses"
-  value       = module.ec2.private_ips
 }

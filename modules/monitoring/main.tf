@@ -8,9 +8,9 @@ locals {
     slice(split("/", var.alb_arn), 1, length(split("/", var.alb_arn)))
   )
 
-  target_group_arn_suffix = join(
-    "/",
-    slice(split("/", var.target_group_arn), 1, length(split("/", var.target_group_arn)))
+  target_group_arn_suffix = regex(
+    "targetgroup/.+$",
+    var.target_group_arn
   )
 }
 #################################
@@ -42,86 +42,12 @@ resource "aws_sns_topic_subscription" "email" {
 # EC2 CPU Utilization Alarms
 #################################
 
-resource "aws_cloudwatch_metric_alarm" "ec2_cpu" {
 
-  count = length(var.instance_ids)
-
-  alarm_name          = "${var.project_name}-${var.environment}-ec2-${count.index + 1}-cpu-high"
-  comparison_operator = "GreaterThanThreshold"
-  evaluation_periods  = 2
-
-  metric_name = "CPUUtilization"
-  namespace   = "AWS/EC2"
-
-  period    = 300
-  statistic = "Average"
-
-  threshold = 80
-
-  alarm_description = "Alarm when EC2 CPU exceeds 80%"
-
-  dimensions = {
-    InstanceId = var.instance_ids[count.index]
-  }
-
-  treat_missing_data = "notBreaching"
-
-  alarm_actions = [
-    aws_sns_topic.alerts.arn
-  ]
-
-  ok_actions = [
-    aws_sns_topic.alerts.arn
-  ]
-
-  tags = {
-    Project     = var.project_name
-    Environment = var.environment
-  }
-}
 #################################
 # EC2 Status Check Alarm
 #################################
 
-resource "aws_cloudwatch_metric_alarm" "ec2_status" {
 
-  count = length(var.instance_ids)
-
-  alarm_name          = "${var.project_name}-${var.environment}-ec2-${count.index + 1}-status-check"
-  comparison_operator = "GreaterThanThreshold"
-  evaluation_periods  = 2
-
-  metric_name = "StatusCheckFailed"
-
-  namespace = "AWS/EC2"
-
-  period = 60
-
-  statistic = "Maximum"
-
-  threshold = 0
-
-  alarm_description = "EC2 Instance Status Check Failed"
-
-  dimensions = {
-    InstanceId = var.instance_ids[count.index]
-  }
-
-  treat_missing_data = "notBreaching"
-
-  alarm_actions = [
-    aws_sns_topic.alerts.arn
-  ]
-
-  ok_actions = [
-    aws_sns_topic.alerts.arn
-  ]
-
-  tags = {
-    Project     = var.project_name
-    Environment = var.environment
-  }
-}
 #################################
 # ALB Healthy Host Alarm
 #################################
@@ -220,38 +146,8 @@ resource "aws_cloudwatch_dashboard" "main" {
         height = 6
 
         properties = {
-
-          title = "EC2 CPU Utilization"
-
-          view = "timeSeries"
-
-          region = "ca-central-1"
-
-          metrics = [
-            for id in var.instance_ids : [
-              "AWS/EC2",
-              "CPUUtilization",
-              "InstanceId",
-              id
-            ]
-          ]
-
-          period = 300
-          stat   = "Average"
-        }
-      },
-
-      {
-        type   = "metric"
-        width  = 12
-        height = 6
-
-        properties = {
-
-          title = "ALB Healthy Hosts"
-
-          view = "timeSeries"
-
+          title  = "ALB Healthy Hosts"
+          view   = "timeSeries"
           region = "ca-central-1"
 
           metrics = [
@@ -265,8 +161,57 @@ resource "aws_cloudwatch_dashboard" "main" {
             ]
           ]
 
-          stat = "Average"
+          stat   = "Average"
+          period = 60
+        }
+      },
 
+      {
+        type   = "metric"
+        width  = 12
+        height = 6
+
+        properties = {
+          title  = "Auto Scaling Group Average CPU"
+          view   = "timeSeries"
+          region = "ca-central-1"
+
+          metrics = [
+            [
+              "AWS/AutoScaling",
+              "GroupInServiceInstances",
+              "AutoScalingGroupName",
+              var.autoscaling_group_name
+            ]
+          ]
+
+          stat   = "Average"
+          period = 300
+        }
+      },
+      {
+        type   = "metric"
+        width  = 12
+        height = 6
+
+        properties = {
+
+          title = "ALB Request Count"
+
+          view = "timeSeries"
+
+          region = "ca-central-1"
+
+          metrics = [
+            [
+              "AWS/ApplicationELB",
+              "RequestCount",
+              "LoadBalancer",
+              local.alb_arn_suffix
+            ]
+          ]
+
+          stat   = "Sum"
           period = 60
         }
       }
@@ -275,3 +220,6 @@ resource "aws_cloudwatch_dashboard" "main" {
 
   })
 }
+
+
+

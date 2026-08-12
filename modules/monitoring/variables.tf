@@ -6,9 +6,6 @@ variable "environment" {
   type = string
 }
 
-variable "instance_ids" {
-  type = list(string)
-}
 
 variable "alb_arn" {
   type = string
@@ -20,4 +17,8 @@ variable "target_group_arn" {
 
 variable "notification_email" {
   type = string
+}
+variable "autoscaling_group_name" {
+  description = "Auto Scaling Group Name"
+  type        = string
 }
