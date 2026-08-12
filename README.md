@@ -2,143 +2,105 @@
 
 Production-ready AWS Infrastructure as Code (IaC) project built with Terraform, featuring modular architecture, remote state management, monitoring, alerting, and continuous integration.
 
----
-
 ![Terraform](https://img.shields.io/badge/Terraform-v1.5+-623CE4?logo=terraform)
 ![AWS](https://img.shields.io/badge/AWS-Cloud-orange?logo=amazonaws)
 ![GitHub Actions](https://img.shields.io/badge/GitHub-Actions-blue?logo=githubactions)
-![IaC](https://img.shields.io/badge/Infrastructure-as-Code-blue)
-![CloudWatch](https://img.shields.io/badge/Monitoring-CloudWatch-success)
+![Infrastructure as Code](https://img.shields.io/badge/Infrastructure-as-Code-blue)
+![License](https://img.shields.io/badge/License-MIT-green)
 
 ---
 
-## 📖 Project Overview
+## 📖 Overview
 
-This project demonstrates the deployment of a production-style AWS infrastructure using **Terraform** and Infrastructure as Code (IaC) best practices.
+This project demonstrates a **production-style Infrastructure as Code (IaC)** deployment on AWS using **Terraform**.
 
-The solution provisions networking, compute, storage, identity management, and load balancing components using reusable Terraform modules.
+The infrastructure provisions a secure, scalable, and highly available environment following AWS best practices.
 
-The infrastructure was deployed successfully on AWS and validated with a clean Terraform state:
+Instead of deploying standalone EC2 instances, the application runs behind an **Application Load Balancer (ALB)** using an **Auto Scaling Group**, making the environment resilient and capable of handling changing workloads.
+
+---
+
+## 🏗 Architecture
 
 ```
-No changes.
-Your infrastructure matches the configuration.
+                        Internet
+                            │
+                            ▼
+                 Application Load Balancer
+                            │
+              ┌─────────────┴─────────────┐
+              ▼                           ▼
+       EC2 Instance                 EC2 Instance
+      (Auto Scaling)              (Auto Scaling)
+              │                           │
+              └─────────────┬─────────────┘
+                            │
+                        Amazon EFS
+
+                 CloudWatch Dashboard
+                         │
+                         ▼
+                 SNS Email Notifications
+
+Terraform
+     │
+     ▼
+Remote State (Amazon S3)
+
+AWS Systems Manager
+(Session Manager)
 ```
 
 ---
 
-# 🏗 AWS Architecture
-
-![AWS Architecture](architecture/aws-architecture.png)
-The solution deploys a highly available AWS infrastructure consisting of a custom VPC, public and private subnets, Application Load Balancer, EC2 instances, EFS shared storage, S3 object storage, IAM roles, CloudWatch monitoring, SNS notifications, and a remote Terraform backend.
----
-
-# ✨ Features
+# 🚀 Features
 
 - Modular Terraform architecture
+- Remote Terraform state
 - Amazon VPC
-- Public Subnets
-- Private Subnets
-- Internet Gateway
+- Public & Private Subnets
 - NAT Gateway
-- Route Tables
-- Application Load Balancer (ALB)
-- Amazon EC2
+- Internet Gateway
+- Application Load Balancer
+- Launch Template
+- Auto Scaling Group
 - Amazon EFS
 - Amazon S3
-- IAM Roles
-- IAM Instance Profiles
-- Security Groups
-- Dynamic Amazon Linux 2023 AMI retrieval using AWS Systems Manager Parameter Store
-- EC2 User Data bootstrapping
-- Target Group Health Checks
-- Github Actions CI
-- Amazon SNS Notifications
+- IAM Roles & Instance Profiles
+- AWS Systems Manager Session Manager
+- CloudWatch Dashboard
 - CloudWatch Alarms
-- CloudWatch Dashboard
-- Remote Terraform State (Amazon S3 Backend)
-- DynamoDB State Locking
+- SNS Email Notifications
+- GitHub Actions CI
 
 ---
-# 📈 Monitoring & Alerting
 
-The infrastructure includes enterprise-style monitoring and alerting using Amazon CloudWatch and Amazon SNS.
-
-### Monitoring Features
-
-- CloudWatch Dashboard
-- EC2 CPU Utilization Alarms
-- EC2 Status Check Alarms
-- ALB Healthy Host Alarm
-- ALB HTTP 5XX Alarm
-- Amazon SNS Email Notifications
-![CloudWatch Dashboard](images/cloudwatch-dashboard.png)
-
-![CloudWatch Alarms](images/cloudwatch-alarms.png)
-
-![SNS](images/sns-topic.png)
----
-# 🔒 Remote Terraform Backend
-
-Terraform state is stored securely in Amazon S3 with state locking provided by DynamoDB.
-
-Features:
-
-- Remote State Storage
-- State Locking
-- Versioning
-- Encryption
-- Team Collaboration Support
-
-![Backend S3](images/backend-s3.png)
-
-![DynamoDB Lock Table](images/backend-dynamodb.png)
----
-# ⚙️ Continuous Integration
-
-GitHub Actions automatically performs:
-
-- terraform fmt
-- terraform validate
-
-![GitHub Actions](images/github-actions.png)
----
-# 🧩 Key Engineering Decisions
-
-- Used a modular Terraform architecture to improve reusability and maintainability.
-- Configured a remote Terraform backend with Amazon S3 and DynamoDB to support collaborative state management.
-- Implemented CloudWatch alarms and Amazon SNS notifications for operational monitoring.
-- Retrieved the latest Amazon Linux 2023 AMI dynamically using AWS Systems Manager Parameter Store instead of hardcoded AMI IDs.
-- Used GitHub Actions to automatically validate Terraform code on every push.
----
 # ☁ AWS Services Used
 
-| Service | Purpose |
-|----------|---------|
-| Amazon VPC | Network isolation |
-| EC2 | Application servers |
-| ALB | Load balancing |
-| Amazon EFS | Shared file system |
-| Amazon S3 | Object storage |
-| IAM | Secure access management |
-| Security Groups | Network security |
-| Internet Gateway | Internet connectivity |
-| NAT Gateway | Private subnet internet access |
-| Route Tables | Traffic routing |
-| Systems Manager Parameter Store | Dynamic AMI lookup |
+- Amazon VPC
+- Amazon EC2
+- Auto Scaling
+- Elastic Load Balancer
+- Amazon EFS
+- Amazon S3
+- IAM
+- AWS Systems Manager
+- Amazon CloudWatch
+- Amazon SNS
 
 ---
 
-# 📂 Repository Structure
+# 📂 Project Structure
 
-```text
+```
 terraform-image-gallery/
+
+├── .github/
+│   └── workflows/
 │
-├── architecture/
-├── images/
 ├── modules/
 │   ├── alb/
-│   ├── ec2/
+│   ├── autoscaling/
 │   ├── efs/
 │   ├── iam/
 │   ├── monitoring/
@@ -147,13 +109,13 @@ terraform-image-gallery/
 │   └── security/
 │
 ├── userdata/
+│   └── userdata.sh
 │
+├── backend.tf
 ├── main.tf
 ├── outputs.tf
 ├── providers.tf
 ├── variables.tf
-├── versions.tf
-├── terraform.tfvars.example
 └── README.md
 ```
 
@@ -165,6 +127,8 @@ Clone the repository
 
 ```bash
 git clone https://github.com/oaolumide1/terraform-aws-image-gallery.git
+
+cd terraform-aws-image-gallery
 ```
 
 Initialize Terraform
@@ -179,7 +143,7 @@ Validate
 terraform validate
 ```
 
-Plan
+Review the execution plan
 
 ```bash
 terraform plan
@@ -191,151 +155,101 @@ Deploy
 terraform apply
 ```
 
+Destroy
+
+```bash
+terraform destroy
+```
+
 ---
 
-# 📊 Outputs
+# 📊 Monitoring
 
-After deployment Terraform provides outputs including:
+CloudWatch Dashboard includes:
 
-- ALB DNS Name
-- EC2 Instance IDs
-- Private IP Addresses
-- VPC ID
-- Public Subnets
-- Private Subnets
-- Amazon EFS DNS
-- Amazon S3 Bucket Name
+- Application Load Balancer Healthy Hosts
+- Application Load Balancer Request Count
+- Auto Scaling Group Monitoring
+
+CloudWatch Alarms
+
+- ALB Healthy Host Count
+- ALB HTTP 5XX Errors
+
+Notifications
+
+- Amazon SNS Email Alerts
+
+---
+
+# 🔒 Security
+
+- Private EC2 Instances
+- AWS Systems Manager Session Manager (no SSH required)
+- IAM Roles
+- Least Privilege Permissions
+- Security Groups
+- Encrypted EFS
+- S3 Server-Side Encryption
 
 ---
 
 # 📸 Screenshots
 
-## Successful Deployment
-
-![Terraform Apply](images/terraform-apply.png)
-
----
-
-## Clean Terraform State
-
-![Terraform Plan](images/terraform-plan-clean.png)
-
----
-
-## Target Group
-
-![Terraform Plan](images/target-group.png)
-
----
-
-## Application Running
-
-![Website](images/website.png)
-
----
-
-## Amazon EC2
-
-![EC2](images/ec2-instances.png)
-
----
-
-## Application Load Balancer
-
-![ALB](images/load-balancer.png)
-
----
-
-## Security Groups
-
-![Security Groups](images/vpc-resources-map.png)
-
----
-
-# 🧠 Challenges Encountered
-
-During this project several real-world infrastructure issues were encountered and resolved.
-
-### EC2 Key Pair
-
-Resolved missing EC2 Key Pair by creating the required key pair in the correct AWS region.
-
----
-
-### Dynamic AMI Lookup
-
-Implemented Amazon Linux 2023 dynamic AMI retrieval using AWS Systems Manager Parameter Store instead of hardcoded AMI IDs.
-
----
-
-### Duplicate Security Group Rules
-
-Resolved duplicate security group rule conflicts by importing existing AWS security group rules into Terraform state.
-
----
-
-### Terraform State Drift
-
-Recovered infrastructure consistency using Terraform Import until Terraform reported:
+Create a **screenshots/** folder and include images such as:
 
 ```
-No changes.
-Your infrastructure matches the configuration.
+screenshots/
+
+architecture.png
+autoscaling-group.png
+alb.png
+target-group.png
+cloudwatch-dashboard.png
+session-manager.png
+terraform-plan-clean.png
 ```
 
 ---
 
-### Application Load Balancer
+# 🎯 Learning Outcomes
 
-Configured ALB listener, target groups, health checks, and security groups to successfully route traffic to EC2 instances.
+This project demonstrates practical experience with:
 
----
-
-# 📚 Lessons Learned
-
-This project strengthened practical experience with:
-
-- Infrastructure as Code
-- Terraform Modules
+- Infrastructure as Code (Terraform)
 - AWS Networking
-- Security Groups
+- High Availability Architecture
+- Auto Scaling
+- Application Load Balancing
 - IAM
-- Load Balancers
-- Amazon EFS
-- Terraform State Management
-- Terraform Import
-- EC2 User Data
-- Infrastructure Troubleshooting
+- Monitoring & Alerting
+- Cloud Operations
+- Infrastructure Automation
+- Production Infrastructure Design
 
 ---
 
-# 🔮 Future Improvements
+# 🚀 Future Improvements
 
-- Auto Scaling Groups
-- Launch Templates
-- AWS Certificate Manager (HTTPS)
-- Route53
+- HTTPS using AWS Certificate Manager (ACM)
+- Route 53 custom domain
 - AWS WAF
-- AWS Secrets Manager
-- Auto Scaling Policies
-- Multi-Environment Support (dev, stage, prod)
+- Blue/Green Deployments
+- CloudWatch Logs
+- ElastiCache Redis
+- CI/CD Pipeline Enhancements
 
 ---
-# 📊 Project Summary
 
-- 8 Terraform Modules
-- 30+ AWS Resources
-- Remote Backend (S3 + DynamoDB)
-- GitHub Actions CI
-- CloudWatch Monitoring
-- Amazon SNS Alerting
-- Infrastructure as Code (IaC)
----
-
-# 👨‍💻 Author
+# 👤 Author
 
 **Oluwashola Olumide**
 
-Cloud • DevOps • Infrastructure as Code • Terraform • AWS
+Cloud | DevOps | Infrastructure Engineer
+
+GitHub:
+
+https://github.com/oaolumide1
 
 ---
+
