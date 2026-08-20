@@ -29,7 +29,7 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: latest
+          terraform_version: 1.15.9
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v6.2.3
@@ -51,4 +51,6 @@ jobs:
         run: terraform validate
 
       - name: Terraform Plan
-        run: terraform plan -input=false -no-color
+        env:
+          TF_VAR_alarm_email: ${{ vars.TERRAFORM_ALARM_EMAIL }}
+        run: terraform plan -input=false -no-color -var-file=terraform.ci.tfvars
