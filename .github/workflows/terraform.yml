@@ -9,9 +9,13 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+  id-token: write
+
 jobs:
   terraform:
-
+    name: Terraform
     runs-on: ubuntu-latest
 
     defaults:
@@ -19,7 +23,6 @@ jobs:
         working-directory: .
 
     steps:
-
       - name: Checkout Repository
         uses: actions/checkout@v4
 
@@ -28,11 +31,24 @@ jobs:
         with:
           terraform_version: latest
 
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v6.2.3
+        with:
+          role-to-assume: ${{ secrets.AWS_TERRAFORM_ROLE_ARN }}
+          aws-region: ca-central-1
+          allowed-account-ids: "738882406911"
+
+      - name: Verify AWS Identity
+        run: aws sts get-caller-identity
+
       - name: Terraform Format Check
         run: terraform fmt -check -recursive
 
       - name: Terraform Init
-        run: terraform init -backend=false
+        run: terraform init
 
       - name: Terraform Validate
         run: terraform validate
+
+      - name: Terraform Plan
+        run: terraform plan -input=false -no-color
